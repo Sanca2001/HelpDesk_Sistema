@@ -33,7 +33,7 @@ Proyecto desarrollado en **Laravel 10** que permite la gestión de tickets de so
 ```bash
 # Clona el repositorio
 git clone https://github.com/Sanca2001/HelpDesk_Sistema.git
-cd helpdesk-andercode
+cd HelpDesk_Sistema
 
 # Instala dependencias backend
 composer install
