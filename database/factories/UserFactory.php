@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Departament;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -28,7 +29,10 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
+            'department_id' => \App\Models\Departament::inRandomOrder()->first()->id ?? 1,
+            'role' => $this->faker->randomElement(['admin', 'agent', 'client']),
             'remember_token' => Str::random(10),
+
         ];
     }
 
@@ -37,7 +41,7 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }

@@ -11,6 +11,9 @@ class Status extends Model
 
     protected $fillable = ['name', 'color'];
 
+    protected $table = 'status';
+
+
     public function tickets()
     {
         return $this->hasMany(Ticket::class);
