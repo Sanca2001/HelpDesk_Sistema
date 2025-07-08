@@ -34,15 +34,15 @@
                 <li class="menu-title"><span>Dashboard</span></li>
 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('dashboard') }}">
+                    <a class="nav-link menu-link  {{ request()->routeIs('dashboard') ? 'active' : '' }} " href="{{ route('dashboard') }}">
                         <i class="ri-window-line"></i> <span>Dashboard</span>
                     </a>
                 </li>
 
                 <li class="menu-title"><span>Mantenimiento</span></li>
 
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#">
+                <li class="nav-item ">
+                    <a class="nav-link menu-link {{ request()->routeIs('categories.*') ? 'active' : '' }}      " href=" {{ route('categories.index') }} ">
                         <i class="ri-money-dollar-circle-line"></i> <span>Categoria</span>
                     </a>
                 </li>
@@ -54,7 +54,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#">
+                    <a class="nav-link menu-link {{ request()->routeIs('departaments.*') ? 'active' : '' }} " href=" {{ route('departaments.index') }} ">
                         <i class="ri-money-dollar-circle-line"></i> <span>Departamentos</span>
                     </a>
                 </li>
