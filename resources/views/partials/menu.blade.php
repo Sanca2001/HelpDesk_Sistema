@@ -35,7 +35,7 @@
 
                 <li class="nav-item">
                     <a class="nav-link menu-link  {{ request()->routeIs('dashboard') ? 'active' : '' }} " href="{{ route('dashboard') }}">
-                        <i class="ri-window-line"></i> <span>Dashboard</span>
+                        <i class="ri-window-line"></i> <span>Principal</span>
                     </a>
                 </li>
 
@@ -43,13 +43,13 @@
 
                 <li class="nav-item ">
                     <a class="nav-link menu-link {{ request()->routeIs('categories.*') ? 'active' : '' }}      " href=" {{ route('categories.index') }} ">
-                        <i class="ri-money-dollar-circle-line"></i> <span>Categoria</span>
+                        <i class="ri-money-dollar-circle-line"></i> <span>Categorias</span>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#">
-                        <i class="ri-money-dollar-circle-line"></i> <span>Usuario</span>
+                    <a class="nav-link menu-link {{ request()->routeIs('users.*') ? 'active' : '' }} " href=" {{ route('users.index') }} ">
+                        <i class="ri-money-dollar-circle-line"></i> <span>Usuarios</span>
                     </a>
                 </li>
 
@@ -60,7 +60,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#">
+                    <a class="nav-link menu-link  {{ request()->routeIs('faqs.*') ? 'active' : '' }} " href=" {{ route('faqs.index') }} ">
                         <i class="ri-money-dollar-circle-line"></i> <span>Faq</span>
                     </a>
                 </li>

@@ -44,10 +44,10 @@ class DepartamentController extends Controller
             $departament =  Departament::create($request->only('name'));
 
             //registrar en system_log
-            SystemLog::register('departaments','create','Se creo el departamentos: ' . $departament->name);
+            SystemLog::register('departaments', 'create', 'Se creo el departamentos: ' . $departament->name);
 
 
-           return redirect()->route('departaments.index')->with('success', 'Departamento registrado correctamente.');
+            return redirect()->route('departaments.index')->with('success', 'Departamento registrado correctamente.');
         } catch (Exception $e) {
             Log::error('Error al registrar departamento: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Ocurrió un error al registrar el departamento.');
@@ -64,18 +64,18 @@ class DepartamentController extends Controller
         }
     }
 
-   //actualiza un departamento
+    //actualiza un departamento
     public function update(Request $request, Departament $departament)
     {
         $request->validate([
-            'name' => 'required|string|max:100, '. $departament->id,
+            'name' => 'required|string|max:100, ' . $departament->id,
         ]);
 
         try {
             $departament->update($request->only('name'));
 
             //registrar en system_log
-            SystemLog::register('departaments','update','Se actualizo el departamento ID: ' . $departament->id);
+            SystemLog::register('departaments', 'update', 'Se actualizo el departamento ID: ' . $departament->id);
 
 
             return redirect()->route('departaments.index')
@@ -90,28 +90,26 @@ class DepartamentController extends Controller
 
 
     //eliminar una departamentos
-    public function destroy(Departament $departament)
+
+
+    public function destroy($id)
     {
         try {
-            $departament->delete();
+            $department = Departament::findOrFail($id);
 
-            SystemLog::register('departaments','delete','Se elimino el departamentos ID: ' . $departament->id);
+            if ($department->users()->exists()) {
+                return redirect()->route('departments.index')->with('error', 'No se puede eliminar: hay usuarios asignados a este departamento.');
+            }
 
+            $department->delete();
+
+            // Registrar en system_logs
+            SystemLog::register('department', 'delete', 'Se eliminó la departamento ID ' . $department->id);
 
             return response()->json(['success' => true, 'message' => 'Departamento eliminado correctamente.']);
-        } catch (Exception $e) {
-            Log::error('Error al eliminar departamentos: ' . $e->getMessage());
-
-            return response()->json([
-                'success' => false,
-                'message' => 'No se pudo eliminar el departamento'
-            ], 500);
+        } catch (\Exception $e) {
+            Log::error('Error al eliminar departamento: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Error al eliminar el departamento.']);
         }
     }
-
-
-
-
-
-
 }

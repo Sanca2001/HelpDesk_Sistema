@@ -18,6 +18,7 @@
 
 <body class="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
     <div class="max-w-screen-xl m-0 sm:m-20 bg-white shadow sm:rounded-lg flex justify-center flex-1">
+
         <div class="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
             <div>
                 <img src="https://storage.googleapis.com/devitary-image-host.appspot.com/15846435184459982716-LogoMakr_7POjrN.png"
@@ -28,7 +29,7 @@
                     Sign up oey
                 </h1> --}}
                 <div class="w-full flex-1 mt-8">
-                    <div class="flex flex-col items-center">
+                    {{-- <div class="flex flex-col items-center">
                         <button
                             class="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline">
                             <div class="bg-white p-2 rounded-full">
@@ -64,14 +65,14 @@
                                 Iniciar con GitHub
                             </span>
                         </button>
-                    </div>
+                    </div> --}}
 
-                    <div class="my-12 border-b text-center">
+                    {{-- <div class="my-12 border-b text-center">
                         <div
                             class="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">
                             O inicia sesión con tu correo electrónico
                         </div>
-                    </div>
+                    </div> --}}
 
                     {{-- <div class="mx-auto max-w-xs">
                         <input
@@ -152,6 +153,8 @@
                 </div>
             </div>
         </div>
+
+
         <div class="flex-1 bg-indigo-100 text-center hidden lg:flex">
             <div class="m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat"
                 style="background-image: url('https://storage.googleapis.com/devitary-image-host.appspot.com/15848031292911696601-undraw_designer_life_w96d.svg');">

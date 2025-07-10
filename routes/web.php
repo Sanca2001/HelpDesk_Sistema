@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DepartamentController;
+use App\Http\Controllers\FaqController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -26,6 +28,10 @@ Route::middleware(['auth'])->group(function (){
     //rutas para las categories
     Route::resource('categories',CategoryController::class);
     Route::resource('departaments',DepartamentController::class);
+    Route::resource('users',UserController::class);
+    Route::resource('faqs',FaqController::class);
+
+
 
 });
 
