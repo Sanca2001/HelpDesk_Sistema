@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Mantenimiento - Categoria')
+@section('title', 'Mantenimiento - Faqs')
 
 @section('content')
     <div class="page-content">
@@ -9,7 +9,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0">Listado de Categorias</h4>
+                        <h4 class="mb-sm-0">Listado de Faqs</h4>
 
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
@@ -43,7 +43,7 @@
 
                         <div class="card-body">
 
-                            <a class="btn btn-primary mb-3" href="{{ route('categories.create') }}">Nuevo Registro</a>
+                            <a class="btn btn-primary mb-3" href="{{ route('faqs.create') }}">Nuevo Registro</a>
 
 
 
@@ -63,10 +63,10 @@
                                     @foreach ($faqs as $faq)
                                         <tr>
                                             <td>{{ $faq->title }}</td>
-                                            <td>{{ $faq->description }}</td>
+                                            <td>{{ \Illuminate\Support\Str::limit($faq->description, 90) }}</td>
 
                                             <td>
-                                                <a href="{{ route('categories.edit', $faq->id) }}"
+                                                <a href="{{ route('faqs.edit', $faq->id) }}"
                                                     class="btn btn-sm btn-warning">Editar</a>
 
                                                 <button class="btn btn-sm btn-danger btn-delete"
@@ -90,7 +90,6 @@
 @endsection
 
 @push('scripts')
-
     <script>
         $(document).ready(function() {
             $('#categoriesTable').DataTable({
@@ -113,7 +112,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: '/categories/' + id,
+                            url: '/faqs/' + id,
                             type: 'DELETE',
                             data: {
                                 _token: '{{ csrf_token() }}'
@@ -138,6 +137,3 @@
         });
     </script>
 @endpush
-
-
-
