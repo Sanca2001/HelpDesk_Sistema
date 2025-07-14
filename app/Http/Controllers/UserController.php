@@ -2,111 +2,139 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Log;
+use App\Models\Departament;
 use Illuminate\Http\Request;
+
 use App\Models\User;
+use App\Models\Department;
+use App\Models\SystemLog;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Exception;
-use PgSql\Lob;
 
 class UserController extends Controller
 {
-
-    //muestra el listado de las departamentos
+    /**
+     * Muestra el listado de usuarios.
+     */
     public function index()
     {
         try {
-            $users = User::all();
+            $users = User::with('departament')->get();
+            // dd($users);
             return view('users.index', compact('users'));
         } catch (Exception $e) {
-            Log::error('Error al cargar la lista de usuarios: ' . $e->getMessage());
+            Log::error('Error en UserController@index: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Error al cargar los usuarios.');
         }
     }
 
-    //muestra el formulario de creacion
+    /*** Muestra el formulario de creación de usuario.*/
     public function create()
     {
         try {
-            return view('users.create');
+            $departments = Departament::all();
+            return view('users.create', compact('departments'));
         } catch (Exception $e) {
-            Log::error('Error al mostrar formulario de creación: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'No se pudo cargar el formulario de nuevo usuario.');
+            Log::error('Error en UserController@create: ' . $e->getMessage());
+            return redirect()->route('users.index')->with('error', 'Error al cargar el formulario.');
         }
     }
 
-    //almacena un nuevo departamentos
+    /*** Almacena un nuevo usuario.*/
+
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'name' => 'required|string|max:100',
-        // ]);
+        $request->validate([
+            'name'          => 'required|string|max:255',
+            'email'         => 'required|email|unique:users,email',
+            'password'      => 'required|string|min:6',
+            'departament_id' => 'required|exists:departaments,id',
+            'role'          => ['required', Rule::in(['admin', 'client', 'agent'])],
+        ]);
 
-        // try {
-        //     $departament =  Departament::create($request->only('name'));
+        try {
+            $user = User::create([
+                'name'          => $request->name,
+                'email'         => $request->email,
+                'password'      => Hash::make($request->password),
+                'departament_id' => $request->departament_id,
+                'role'          => $request->role,
+            ]);
 
-        //     //registrar en system_log
-        //     SystemLog::register('departaments','create','Se creo el departamentos: ' . $departament->name);
+            SystemLog::register('users', 'create', 'Se creó el usuario: ' . $user->email);
 
+            return redirect()->route('users.index')->with('success', 'Usuario registrado correctamente.');
+        } catch (Exception $e) {
+            Log::error('Error en UserController@store: ' . $e->getMessage());
 
-        //    return redirect()->route('departaments.index')->with('success', 'Departamento registrado correctamente.');
-        // } catch (Exception $e) {
-        //     Log::error('Error al registrar departamento: ' . $e->getMessage());
-        //     return redirect()->back()->with('error', 'Ocurrió un error al registrar el departamento.');
-        // }
+            return redirect()->back()->with('error', 'Ocurrió un error al guardar el usuario.');
+        }
     }
+
+    /*** Muestra el formulario de edición de un usuario.*/
 
     public function edit(User $user)
     {
-        // try {
-        //     return view('departaments.edit', compact('departament'));
-        // } catch (Exception $e) {
-        //     Log::error('Error al cargar formulario de edición: ' . $e->getMessage());
-        //     return redirect()->route('departaments.index')->with('error', 'No se pudo cargar el formulario de edición.');
-        // }
+        try {
+            $departments = Departament::all();
+            return view('users.edit', compact('user', 'departments'));
+        } catch (Exception $e) {
+            Log::error('Error en UserController@edit: ' . $e->getMessage());
+            return redirect()->route('users.index')->with('error', 'Error al cargar el usuario.');
+        }
     }
 
-    //actualiza un departamento
+    /*** Actualiza un usuario existente.*/
+
     public function update(Request $request, User $user)
     {
-        // $request->validate([
-        //     'name' => 'required|string|max:100, '. $departament->id,
-        // ]);
+        $request->validate([
+            'name'          => 'required|string|max:255',
+            'email'         => ['required', 'email', Rule::unique('users')->ignore($user->id)],
+            'password'      => 'nullable|string|min:6',
+            'departament_id' => 'required|exists:departaments,id',
+            'role'          => ['required', Rule::in(['admin', 'client', 'agent'])],
+        ]);
 
-        // try {
-        //     $departament->update($request->only('name'));
+        try {
+            $user->name          = $request->name;
+            $user->email         = $request->email;
+            $user->departament_id = $request->departament_id;
+            $user->role          = $request->role;
 
-        //     //registrar en system_log
-        //     SystemLog::register('departaments','update','Se actualizo el departamento ID: ' . $departament->id);
+            if ($request->filled('password')) {
+                $user->password = Hash::make($request->password);
+            }
 
+            $user->save();
 
-        //     return redirect()->route('departaments.index')
-        //         ->with('success', 'Departamento actualizado correctamente.');
-        // } catch (Exception $e) {
-        //     Log::error('Error al actualizar departamento: ' . $e->getMessage());
+            SystemLog::register('users', 'update', 'Se actualizó el usuario ID ' . $user->id);
 
-        //     return redirect()->back()
-        //         ->with('error', 'Ocurrió un error al actualizar el departmento.');
-        // }
+            return redirect()->route('users.index')->with('success', 'Usuario actualizado correctamente.');
+        } catch (Exception $e) {
+            Log::error('Error en UserController@update: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Ocurrió un error al actualizar el usuario.');
+        }
     }
 
+    /*** Elimina un usuario.*/
 
-    //eliminar una departamentos
     public function destroy(User $user)
     {
-        // try {
-        //     $departament->delete();
+        try {
+            $user->delete();
 
-        //     SystemLog::register('departaments','delete','Se elimino el departamentos ID: ' . $departament->id);
+            SystemLog::register('users', 'delete', 'Se eliminó el usuario ID ' . $user->id);
 
-
-        //     return response()->json(['success' => true, 'message' => 'Departamento eliminado correctamente.']);
-        // } catch (Exception $e) {
-        //     Log::error('Error al eliminar departamentos: ' . $e->getMessage());
-
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => 'No se pudo eliminar el departamento'
-        //     ], 500);
-        // }
+            return response()->json(['success' => true, 'message' => 'Usuario eliminado correctamente.']);
+        } catch (Exception $e) {
+            Log::error('Error en UserController@destroy: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'No se pudo eliminar el usuario.']);
+        }
     }
+
+
+
 }

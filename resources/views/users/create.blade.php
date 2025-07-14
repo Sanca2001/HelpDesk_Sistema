@@ -29,10 +29,6 @@
             @endif
 
 
-
-
-
-
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
@@ -43,35 +39,70 @@
 
                         <div class="card-body">
 
-                            <form action="{{ route('categories.store') }}" method="POST">
+                            <form action="{{ route('users.store') }}" method="POST">
                                 @csrf
 
-                                <!-- Nombre Input -->
-                                <div class="mt-2">
-                                    <label for="name" class="form-label">Nombre</label>
-                                    <input type="text" name="name" class="form-control" id="name">
-
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Nombre <span class="text-danger">*</span></label>
+                                    <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required>
                                     @error('name')
                                         <span class="text-danger small">{{ $message }}</span>
                                     @enderror
                                 </div>
 
-                                <!-- Descripcion Textarea -->
-                                <div class="mt-2">
-                                    <label for="description" class="form-label">Descripcion</label>
-                                    <textarea name="description" class="form-control" id="description" rows="3"></textarea>
-
-                                    @error('description')
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Correo Electrónico <span class="text-danger">*</span></label>
+                                    <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}" required>
+                                    @error('email')
                                         <span class="text-danger small">{{ $message }}</span>
                                     @enderror
                                 </div>
 
-                                {{-- botn de enviar --}}
-                                <button type="submit"
-                                    class=" mt-2 btn btn-outline-success waves-effect waves-light">Crear</button>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Contraseña <span class="text-danger">*</span></label>
+                                    <input type="password" name="password" id="password" class="form-control" required>
+                                    @error('password')
+                                        <span class="text-danger small">{{ $message }}</span>
+                                    @enderror
+                                </div>
 
+                                <div class="mb-3">
+                                    <label for="departament_id" class="form-label">Departamento <span class="text-danger">*</span></label>
+                                    <select name="departament_id" id="departament_id" class="form-select" required>
+                                        <option value="">Seleccione...</option>
+                                        @foreach ($departments as $department)
+                                            <option value="{{ $department->id }}"
+                                                {{ old('departament_id') == $department->id ? 'selected' : '' }}>
+                                                {{ $department->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('departament_id')
+                                        <span class="text-danger small">{{ $message }}</span>
+                                    @enderror
+                                </div>
 
+                                <div class="mb-3">
+                                    <label for="role" class="form-label">Rol <span class="text-danger">*</span></label>
+                                    <select name="role" id="role" class="form-select" required>
+                                        <option value="">Seleccione...</option>
+                                        <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Administrador
+                                        </option>
+                                        <option value="agent" {{ old('role') == 'agent' ? 'selected' : '' }}>Agente
+                                        </option>
+                                        <option value="client" {{ old('role') == 'client' ? 'selected' : '' }}>Cliente
+                                        </option>
+                                    </select>
+                                    @error('role')
+                                        <span class="text-danger small">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="t">
+                                    <button type="submit" class="btn btn-success">Guardar</button>
+                                </div>
                             </form>
+
 
 
 
@@ -87,10 +118,3 @@
 
 @push('scripts')
 @endpush
-
-
-
-
-
-
-

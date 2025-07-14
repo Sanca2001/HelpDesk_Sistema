@@ -54,10 +54,10 @@
                                 <thead>
                                     <tr>
 
-                                        <th>ID</th>
                                         <th>Nombre</th>
                                         <th>Email</th>
                                         <th>Rol</th>
+                                        <th>Departamento</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
@@ -65,10 +65,13 @@
 
                                     @foreach ($users as $user)
                                         <tr>
-                                            <td>{{ $user->id }}</td>
                                             <td>{{ $user->name }}</td>
                                             <td>{{ $user->email }}</td>
-                                            <td> {{ $user->role }}</td>
+                                            <td>{{ ucfirst($user->role) }}</td>
+                                            <td>{{ $user->departament->name ?? 'N/A' }}</td>
+
+
+
 
                                             <td>
                                                 <a href="{{ route('users.edit', $user->id) }}"
@@ -95,7 +98,6 @@
 @endsection
 
 @push('scripts')
-
     <script>
         $(document).ready(function() {
             $('#departamentsTable').DataTable({
@@ -118,7 +120,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: '/departaments/' + id,
+                            url: '/users/' + id,
                             type: 'DELETE',
                             data: {
                                 _token: '{{ csrf_token() }}'
@@ -133,7 +135,8 @@
                                 }
                             },
                             error: function() {
-                                Swal.fire('Error', 'No se pudo eliminar el departamento.',
+                                Swal.fire('Error',
+                                    'No se pudo eliminar el departamento.',
                                     'error');
                             }
                         });
@@ -143,27 +146,3 @@
         });
     </script>
 @endpush
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
